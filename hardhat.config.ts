@@ -35,12 +35,14 @@ const config: HardhatUserConfig = {
   solidity: {
     compilers: [
       {
-        version: "0.6.5",
+        version: "0.6.12",
         settings: {
           optimizer: {
             enabled: true,
-            runs: 200,
+            runs: 1000000,
+            details: { yul: true, deduplicate: true, cse: true, constantOptimizer: true }
           },
+          evmVersion: "istanbul",
         },
       },
     ],
