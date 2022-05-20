@@ -32,13 +32,13 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   // Deploy the feature contracts. In addition to ERC721OrdersFeature and
   // whatnot, you'll need SimpleFunctionRegistryFeature and OwnableFeature.
-  await deploy('ERC721OrdersFeature', {
+  const erc721OrdersFeature = await deploy('ERC721OrdersFeature', {
     from: deployer,
     args: [zeroEx.address, wETH9.address],
     log: true,
   });
 
-  await deploy('ERC1155OrdersFeature', {
+  const erc1155OrdersFeature = await deploy('ERC1155OrdersFeature', {
     from: deployer,
     args: [zeroEx.address, wETH9.address],
     log: true,
@@ -62,6 +62,24 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       registry: simpleFunctionRegistryFeature.address, 
       ownable: ownableFeature.address
     });
+  // Verify
+  const zeroExContract = await hre.ethers.getContractAt("ZeroEx", zeroEx.address);
+  // 0x261fe679
+  // Function: migrate(address target, bytes data, address newOwner)
+  const migrateFunctionContractAddress = await zeroExContract.getFunctionImplementation(0x261fe679);
+  console.log("migrate function address " + migrateFunctionContractAddress + " correctly points to deployed OwnableFeature contract " + ownableFeature.address)
+
+  // Now the migrate function is registered to the proxy. Call ZeroEx.migrate
+  // for each feature contract (other than SimpleFunctionRegistryFeature and
+  // OwnableFeature). This call will usually look like this:
+  // ZeroEx.migrate(erc721OrdersFeature.address, 0x8fd3ab80, yourEOA)
+  // Most features' migrate function don't take any arguments so we pass in
+  // 0x8fd3ab80 as the second argument, which is the function selector for migrate().
+  const ownableFeatureContract = await hre.ethers.getContractAt("OwnableFeature", zeroEx.address);
+  await ownableFeatureContract.migrate(erc721OrdersFeature.address, 0x8fd3ab80, deployer);
+  await ownableFeatureContract.migrate(erc1155OrdersFeature.address, 0x8fd3ab80, deployer);
+
+
 
 };
 
