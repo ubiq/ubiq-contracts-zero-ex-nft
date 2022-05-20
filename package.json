@@ -1,0 +1,14 @@
+{
+  "name": "0xNFT",
+  "version": "1.0.0",
+  "description": "Ubiq 0x v4 contracts",
+  "main": "hardhat.config.ts",
+  "repository": "https://github.com/ubiq/0xNFT",
+  "author": "Julian Yap",
+  "license": "MIT",
+  "devDependencies": {
+    "@0x/contracts-utils": "^4.8.11",
+    "hardhat": "^2.9.6",
+    "typescript": "^4.6.4"
+  }
+}
