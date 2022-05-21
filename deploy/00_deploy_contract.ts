@@ -44,6 +44,11 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     log: true,
   });
 
+  const erc165Feature = await deploy('ERC165Feature', {
+    from: deployer,
+    log: true,
+  });
+
   const simpleFunctionRegistryFeature = await deploy('SimpleFunctionRegistryFeature', {
     from: deployer,
     log: true,
@@ -79,6 +84,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   await ownableFeatureContract.migrate(erc721OrdersFeature.address, 0x8fd3ab80, deployer);
   await ownableFeatureContract.migrate(erc1155OrdersFeature.address, 0x8fd3ab80, deployer);
 
+  // Depending on the ERC721/ERC1155 token that you're testing with, you may
+  // need ERC165Feature. This contract doesn't have a migrate function, since
+  // it only exposes a single function. Instead, you would call:
+  // ZeroEx.extend(0x01ffc9a7, erc165Feature.address) to register the supportsInterface function.
+  const simpleFunctionRegistryFeatureContract = await hre.ethers.getContractAt("SimpleFunctionRegistryFeature", zeroEx.address);
+  await simpleFunctionRegistryFeatureContract.extend(0x01ffc9a7, erc165Feature.address)
 
 
 };
