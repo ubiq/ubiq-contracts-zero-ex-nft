@@ -44,6 +44,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     log: true,
   });
 
+  const otcOrdersFeature = await deploy('OtcOrdersFeature', {
+    from: deployer,
+    args: [zeroEx.address, wETH9.address],
+    log: true,
+  });
+
   const erc165Feature = await deploy('ERC165Feature', {
     from: deployer,
     log: true,
@@ -83,6 +89,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const ownableFeatureContract = await hre.ethers.getContractAt("OwnableFeature", zeroEx.address);
   await ownableFeatureContract.migrate(erc721OrdersFeature.address, 0x8fd3ab80, deployer);
   await ownableFeatureContract.migrate(erc1155OrdersFeature.address, 0x8fd3ab80, deployer);
+  await ownableFeatureContract.migrate(otcOrdersFeature.address, 0x8fd3ab80, deployer);
 
   // Depending on the ERC721/ERC1155 token that you're testing with, you may
   // need ERC165Feature. This contract doesn't have a migrate function, since
