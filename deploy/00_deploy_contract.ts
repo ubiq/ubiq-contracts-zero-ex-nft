@@ -1,12 +1,13 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { DeployFunction } from 'hardhat-deploy/types';
+import { network } from 'hardhat';
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const {
     deployments: { deploy },
     getNamedAccounts,
   } = hre;
-  let { deployer } = await getNamedAccounts();
+  let { deployer, weth9ContractAddress } = await getNamedAccounts();
 
   // Deploy the InitialMigration contract. In the constructor, you can use
   // your EOA as the initializeCaller_.
@@ -25,28 +26,31 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   });
 
   // WETH9 is used as a constructor value
-  const wETH9 = await deploy('WETH9', {
-    from: deployer,
-    log: true,
-  });
+  if (network.name === "localhost" || network.name === "hardhat") {
+    const wETH9 = await deploy('WETH9', {
+      from: deployer,
+      log: true,
+    });
+    weth9ContractAddress = wETH9.address;
+  };
 
   // Deploy the feature contracts. In addition to ERC721OrdersFeature and
   // whatnot, you'll need SimpleFunctionRegistryFeature and OwnableFeature.
   const erc721OrdersFeature = await deploy('ERC721OrdersFeature', {
     from: deployer,
-    args: [zeroEx.address, wETH9.address],
+    args: [zeroEx.address, weth9ContractAddress],
     log: true,
   });
 
   const erc1155OrdersFeature = await deploy('ERC1155OrdersFeature', {
     from: deployer,
-    args: [zeroEx.address, wETH9.address],
+    args: [zeroEx.address, weth9ContractAddress],
     log: true,
   });
 
   const otcOrdersFeature = await deploy('OtcOrdersFeature', {
     from: deployer,
-    args: [zeroEx.address, wETH9.address],
+    args: [zeroEx.address, weth9ContractAddress],
     log: true,
   });
 
