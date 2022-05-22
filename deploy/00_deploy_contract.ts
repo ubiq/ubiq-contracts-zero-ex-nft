@@ -36,74 +36,41 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   // Deploy the feature contracts. In addition to ERC721OrdersFeature and
   // whatnot, you'll need SimpleFunctionRegistryFeature and OwnableFeature.
-  const erc721OrdersFeature = await deploy('ERC721OrdersFeature', {
+  await deploy('ERC721OrdersFeature', {
     from: deployer,
     args: [zeroEx.address, weth9ContractAddress],
     log: true,
   });
 
-  const erc1155OrdersFeature = await deploy('ERC1155OrdersFeature', {
+  await deploy('ERC1155OrdersFeature', {
     from: deployer,
     args: [zeroEx.address, weth9ContractAddress],
     log: true,
   });
 
-  const otcOrdersFeature = await deploy('OtcOrdersFeature', {
+  await deploy('OtcOrdersFeature', {
     from: deployer,
     args: [zeroEx.address, weth9ContractAddress],
     log: true,
   });
 
-  const erc165Feature = await deploy('ERC165Feature', {
+  await deploy('ERC165Feature', {
     from: deployer,
     log: true,
   });
 
-  const simpleFunctionRegistryFeature = await deploy('SimpleFunctionRegistryFeature', {
+  await deploy('SimpleFunctionRegistryFeature', {
     from: deployer,
     log: true,
   });
   
-  const ownableFeature = await deploy('OwnableFeature', {
+  await deploy('OwnableFeature', {
     from: deployer,
     log: true,
   });
-
-  // Call InitialMigration.initializeZeroEx(yourAddress, zeroExAddress, {registry, ownable})
-  const initialMigrationContract = await hre.ethers.getContractAt("InitialMigration", initialMigration.address);
-  await initialMigrationContract.initializeZeroEx(deployer, 
-    zeroEx.address, 
-    {
-      registry: simpleFunctionRegistryFeature.address, 
-      ownable: ownableFeature.address
-    });
-  // Verify
-  const zeroExContract = await hre.ethers.getContractAt("ZeroEx", zeroEx.address);
-  // 0x261fe679
-  // Function: migrate(address target, bytes data, address newOwner)
-  const migrateFunctionContractAddress = await zeroExContract.getFunctionImplementation(0x261fe679);
-  console.log("migrate function address " + migrateFunctionContractAddress + " correctly points to deployed OwnableFeature contract " + ownableFeature.address)
-
-  // Now the migrate function is registered to the proxy. Call ZeroEx.migrate
-  // for each feature contract (other than SimpleFunctionRegistryFeature and
-  // OwnableFeature). This call will usually look like this:
-  // ZeroEx.migrate(erc721OrdersFeature.address, 0x8fd3ab80, yourEOA)
-  // Most features' migrate function don't take any arguments so we pass in
-  // 0x8fd3ab80 as the second argument, which is the function selector for migrate().
-  const ownableFeatureContract = await hre.ethers.getContractAt("OwnableFeature", zeroEx.address);
-  await ownableFeatureContract.migrate(erc721OrdersFeature.address, 0x8fd3ab80, deployer);
-  await ownableFeatureContract.migrate(erc1155OrdersFeature.address, 0x8fd3ab80, deployer);
-  await ownableFeatureContract.migrate(otcOrdersFeature.address, 0x8fd3ab80, deployer);
-
-  // Depending on the ERC721/ERC1155 token that you're testing with, you may
-  // need ERC165Feature. This contract doesn't have a migrate function, since
-  // it only exposes a single function. Instead, you would call:
-  // ZeroEx.extend(0x01ffc9a7, erc165Feature.address) to register the supportsInterface function.
-  const simpleFunctionRegistryFeatureContract = await hre.ethers.getContractAt("SimpleFunctionRegistryFeature", zeroEx.address);
-  await simpleFunctionRegistryFeatureContract.extend(0x01ffc9a7, erc165Feature.address)
-
-
 };
 
 export default func;
-func.tags = ['InitialMigration', 'ZeroEx'];
+func.tags = ['InitialMigration', 'ZeroEx', 'ERC721OrdersFeature',
+  'ERC1155OrdersFeature', 'OtcOrdersFeature', 'ERC165Feature',
+  'SimpleFunctionRegistryFeature', 'OwnableFeature'];
