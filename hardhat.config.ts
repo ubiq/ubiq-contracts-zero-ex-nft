@@ -1,6 +1,7 @@
 import { task } from "hardhat/config";
 import "@nomiclabs/hardhat-waffle";
 import 'hardhat-deploy';
+import 'hardhat-abi-exporter';
 
 import { HardhatUserConfig } from 'hardhat/config';
 
@@ -58,7 +59,11 @@ const config: HardhatUserConfig = {
   namedAccounts: {
     deployer: {
       default: 0,
-    }
+      "mainnet": '0xc5070A5CB93F4497240a57969485C0FbF5c2ee3A',
+    },
+  },
+  abiExporter: {
+    path: './data/abi',
   }
 };
 

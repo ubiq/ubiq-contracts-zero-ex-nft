@@ -1,4 +1,4 @@
-# 0xNFT
+# Ubiq - Contracts 0x NFT
 
 ## Description
 
@@ -25,6 +25,8 @@ Smart contracts are written in Solidity and managed via Hardhat.
 `npx hardhat --network kovan etherscan-verify --api-key <api-key>` - Etherscan Verify the Kovan Testnet deployment
 
 `npx hardhat --network kovan sourcify` - Sourcify the Kovan Testnet deployment
+
+`npx hardhat export-abi` - Manually export ABI
 
 ## Deployments
 
