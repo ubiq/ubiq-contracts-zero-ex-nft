@@ -29,6 +29,7 @@ Smart contracts are written in Solidity and managed via Hardhat.
 Ubiq:
 * InitialMigration: [0x5b957E61FF15863c29B69da1c1172baBB044c728](https://ubiqscan.io/address/0x5b957E61FF15863c29B69da1c1172baBB044c728)
 * ZeroEx: [0x19aaD856cE8c4C7e813233b21d56dA97796cC052](https://ubiqscan.io/address/0x19aaD856cE8c4C7e813233b21d56dA97796cC052)
+  * Sourcify verification: [0x19aaD856cE8c4C7e813233b21d56dA97796cC052](https://repo.sourcify.dev/contracts/full_match/8/0x19aaD856cE8c4C7e813233b21d56dA97796cC052/)
 * OwnableFeature: [0x3956FB6BDFcb81c12b3B965DEC05B4012f4Be6DD](https://ubiqscan.io/address/0x3956FB6BDFcb81c12b3B965DEC05B4012f4Be6DD)
 * SimpleFunctionRegistryFeature: [0xC1Ab827a823d17D9db77fdF4D61809F0391B9050](https://ubiqscan.io/address/0xC1Ab827a823d17D9db77fdF4D61809F0391B9050)
 * ERC165Feature: [0x71d56d94261086bFfa3D5f97c2043cD7E1a87afb](https://ubiqscan.io/address/0x71d56d94261086bFfa3D5f97c2043cD7E1a87afb)
